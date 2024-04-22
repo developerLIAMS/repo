@@ -35,58 +35,35 @@ def obtener_dolar_blue():
     else:
         return None, None, None
 
-# Función para mostrar las tasas de cambio en la aplicación
-def mostrar_tasas():
-    st.title("Consulta de Tasas de Cambio")
+# Configuración de la apariencia de la aplicación
+st.set_page_config(page_title="Consulta de Tasas de Cambio", page_icon=":money_with_wings:")
+st.title("Tasas de Cambio")
 
-    # Obtener las tasas de cambio
-    tasas = {
-        'COP': obtener_tasa('usdt', 'cop', "enviar"),
-        'BRL': obtener_tasa('usdt', 'brl', "enviar"),
-        'PEN': obtener_tasa('usdt', 'pen', "enviar"),
-        'CLP': obtener_tasa('usdt', 'clp', "enviar"),
-        'MXN': obtener_tasa('usdt', 'mxn', "enviar"),
-        'PYG': obtener_tasa('usdt', 'pyg', "enviar"),
-        'UYU': obtener_tasa('usdt', 'uyu', "enviar"),
-    }
-    
-    # Mostrar las tasas de cambio
-    for moneda, tasa in tasas.items():
-        if tasa is not None:
-            st.write(f"{moneda}: {tasa}")
-        else:
-            st.write(f"No se pudo obtener la tasa de {moneda}")
+# Obtener las tasas de cambio
+tasas = {
+    'COP': obtener_tasa('usdt', 'cop', "enviar"),
+    'BRL': obtener_tasa('usdt', 'brl', "enviar"),
+    'PEN': obtener_tasa('usdt', 'pen', "enviar"),
+    'CLP': obtener_tasa('usdt', 'clp', "enviar"),
+    'MXN': obtener_tasa('usdt', 'mxn', "enviar"),
+    'PYG': obtener_tasa('usdt', 'pyg', "enviar"),
+    'UYU': obtener_tasa('usdt', 'uyu', "enviar"),
+}
 
-    # Mostrar la tasa de cambio EUR/USD
-    tasa_compra, tasa_venta = obtener_tasa_euro_usd()
-    st.write(f"EUR/USD - Compra: {tasa_compra}, Venta: {tasa_venta}")
-
-    # Mostrar la tasa del dólar blue
-    dolar_blue_ask, dolar_blue_compra, dolar_blue_venta = obtener_dolar_blue()
-    if dolar_blue_ask is not None:
-        st.write(f"Dólar Blue - Tasa Dólar Blue: {dolar_blue_ask}, Compra: {dolar_blue_compra}, Venta: {dolar_blue_venta}")
+# Mostrar las tasas de cambio
+for moneda, tasa in tasas.items():
+    if tasa is not None:
+        st.write(f"{moneda.upper()}: {tasa}")
     else:
-        st.write("No se pudo obtener la información del Dólar Blue")
+        st.write(f"No se pudo obtener la tasa de {moneda.upper()}")
 
-# Configurar la apariencia de la aplicación
-st.set_page_config(page_title="Tasas de Cambio", page_icon=":money_with_wings:")
-st.markdown(
-    """
-    <style>
-    .stApp {
-        max-width: 900px;
-        padding: 20px;
-        background-color: #f0f0f0;
-        border-radius: 10px;
-        margin-top: 20px;
-    }
-    .stMarkdown {
-        color: #333333;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# Mostrar la tasa de cambio EUR/USD
+tasa_compra, tasa_venta = obtener_tasa_euro_usd()
+st.write(f"EUR/USD - Compra: {tasa_compra}, Venta: {tasa_venta}")
 
-# Mostrar la aplicación
-mostrar_tasas()
+# Mostrar la tasa del dólar blue
+dolar_blue_ask, dolar_blue_compra, dolar_blue_venta = obtener_dolar_blue()
+if dolar_blue_ask is not None:
+    st.write(f"Dólar Blue - Tasa Dólar Blue: {dolar_blue_ask}, Compra: {dolar_blue_compra}, Venta: {dolar_blue_venta}")
+else:
+    st.write("No se pudo obtener la información del Dólar Blue")
