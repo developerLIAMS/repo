@@ -2,18 +2,18 @@ import streamlit as st
 import requests
 
 # Función para obtener las tasas de cambio
-def obtener_tasa(coin, fiat, tipo):
-    url = f'https://criptoya.com/api/binancep2p/{coin}/{fiat}/0.1'
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        ask = data['ask']
-        if tipo == "enviar":
-            return round(ask * 0.94, 1)  # Restar 6% y redondear a un decimal
-        elif tipo == "recibir":
-            return round(ask * 1.05, 1)  # Sumar 5% y redondear a un decimal
-    else:
-        return None
+def obtener_tasas_de_cambio():
+    tasas = {}
+    monedas_enviar_recibir = ['cop', 'brl', 'pen', 'clp']
+    monedas_solo_enviar = ['mxn', 'pyg', 'uyu']
+    for moneda in monedas_enviar_recibir:
+        tasa_enviar = obtener_tasa('usdt', moneda, "enviar")
+        tasa_recibir = obtener_tasa('usdt', moneda, "recibir")
+        tasas[moneda.upper()] = (tasa_enviar, tasa_recibir)
+    for moneda in monedas_solo_enviar:
+        tasa_enviar = obtener_tasa('usdt', moneda, "enviar")
+        tasas[moneda.upper()] = tasa_enviar
+    return tasas
 
 # Función para obtener la tasa de cambio EUR/USD
 def obtener_tasa_euro_usd():
@@ -39,31 +39,22 @@ def obtener_dolar_blue():
 st.set_page_config(page_title="Consulta de Tasas de Cambio", page_icon=":money_with_wings:")
 st.title("Tasas de Cambio")
 
-# Obtener las tasas de cambio
-tasas = {
-    'COP': obtener_tasa('usdt', 'cop', "enviar"),
-    'BRL': obtener_tasa('usdt', 'brl', "enviar"),
-    'PEN': obtener_tasa('usdt', 'pen', "enviar"),
-    'CLP': obtener_tasa('usdt', 'clp', "enviar"),
-    'MXN': obtener_tasa('usdt', 'mxn', "enviar"),
-    'PYG': obtener_tasa('usdt', 'pyg', "enviar"),
-    'UYU': obtener_tasa('usdt', 'uyu', "enviar"),
-}
-
-# Mostrar las tasas de cambio
+# Obtener y mostrar las tasas de cambio
+tasas = obtener_tasas_de_cambio()
 for moneda, tasa in tasas.items():
-    if tasa is not None:
-        st.write(f"{moneda.upper()}: {tasa}")
+    if isinstance(tasa, tuple):
+        st.write(f"{moneda}: {tasa[0]} / {tasa[1]}")
     else:
-        st.write(f"No se pudo obtener la tasa de {moneda.upper()}")
+        st.write(f"{moneda}: {tasa}")
 
 # Mostrar la tasa de cambio EUR/USD
 tasa_compra, tasa_venta = obtener_tasa_euro_usd()
-st.write(f"EUR/USD - Compra: {tasa_compra}, Venta: {tasa_venta}")
+st.write(f"EUR/USD: Compra: {tasa_compra}, Venta: {tasa_venta}")
 
 # Mostrar la tasa del dólar blue
 dolar_blue_ask, dolar_blue_compra, dolar_blue_venta = obtener_dolar_blue()
 if dolar_blue_ask is not None:
-    st.write(f"Dólar Blue - Tasa Dólar Blue: {dolar_blue_ask}, Compra: {dolar_blue_compra}, Venta: {dolar_blue_venta}")
+    st.write(f"Dólar Blue: Tasa Dólar Blue: {dolar_blue_ask}, Compra: {dolar_blue_compra}, Venta: {dolar_blue_venta}")
 else:
     st.write("No se pudo obtener la información del Dólar Blue")
+
