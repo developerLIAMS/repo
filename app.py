@@ -1,5 +1,7 @@
 import streamlit as st
 import requests
+from requests import get as requests_get
+
 
 # Función para obtener las tasas de cambio
 def obtener_tasas_de_cambio():
