@@ -16,9 +16,9 @@ def obtener_tasa(coin, fiat, tipo):
 
 def obtener_tasa_euro_usd():
     tasa_base = 1.065  # Tasa EUR/USD
-    tasa_compra = tasa_base * 0.995  # Compra a -0.5%
-    tasa_venta = tasa_base * 1.02    # Venta a +2%
-    return tasa_compra, tasa_venta  # Devuelve sin redondear
+    tasa_compra = round(tasa_base * 0.995, 2)  # Compra a -0.5%, redondeado a dos decimales
+    tasa_venta = round(tasa_base * 1.02, 2)    # Venta a +2%, redondeado a dos decimales
+    return tasa_compra, tasa_venta
 
 def obtener_dolar_blue():
     url = 'https://criptoya.com/api/dolar'
