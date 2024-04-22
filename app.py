@@ -67,4 +67,3 @@ st.title("Consulta de Tasas de Cambio")
 tasas = obtener_tasas_de_cambio()
 for tasa in tasas:
     st.write(f"{tasa[0]}: {tasa[1]}")
-
